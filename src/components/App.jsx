@@ -1,49 +1,28 @@
+import { useDispatch, useSelector } from "react-redux";
 import "./App.css";
 import ContactForm from "./ContactForm/ContactForm";
 import ContactList from "./ContactList/ContactList";
 import SearchBox from "./SearchBox/SearchBox";
+import { selectError, selectLoading } from "../redux/selectors";
+import { useEffect } from "react";
+import { fetchContacts } from "../redux/contactsOps";
 
 export default function App() {
-  // const [inputValue, setInputValue] = useState("");
-  // const [contacts, setContacts] = useState(() => {
-  //   const savedContacts = window.localStorage.getItem("saved-contacts");
-  //   if (savedContacts !== null) {
-  //     return JSON.parse(savedContacts);
-  //   }
-  //   return contactsList;
-  // });
+  const dispatch = useDispatch();
+  const loading = useSelector(selectLoading);
+  const error = useSelector(selectError);
 
-  // useEffect(() => {
-  //   window.localStorage.setItem("saved-contacts", JSON.stringify(contacts));
-  // }, [contacts]);
-
-  // const handleChange = (evt) => {
-  //   console.log(evt.target.value);
-  // };
-
-  // const filteredContacts = contacts.filter((contact) =>
-  //   contact.name.toLowerCase().includes(inputValue.toLowerCase())
-  // );
-
-  // const handleAddContact = (newContact) => {
-  //   setContacts((prevContacts) => [
-  //     ...prevContacts,
-  //     {
-  //       ...newContact,
-  //       id: nanoid(10),
-  //     },
-  //   ]);
-  // };
-
-  // const handleDeleteContact = () => {
-  //   console.log("delete");
-  // };
+  useEffect(() => {
+    dispatch(fetchContacts());
+  }, [dispatch]);
 
   return (
     <>
       <h1>Phonebook</h1>
       <ContactForm />
       <SearchBox />
+      {loading && !error && <h2>Loading...</h2>}
+      {error && <h2>{error}</h2>}
       <ContactList />
     </>
   );
